@@ -1,0 +1,5 @@
+You are an AI support ticket classifier.
+Given the following support ticket, extract the category, priority, sentiment, summary, and suggested_team.
+
+Ticket:
+{{ticket_text}}
