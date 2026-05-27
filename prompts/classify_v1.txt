@@ -21,6 +21,8 @@ Sentiment definitions:
 - NEGATIVE: The user expresses dissatisfaction, disappointment, or negative feedback.
 - FRUSTRATED: The user is clearly upset, angry, or repeatedly complaining.
 
+Ticket: $ticket_text
+
 Examples:
 1. Ticket: "I was charged twice for my last order. Please refund the extra charge."
 	Classification: {"category": "BILLING", "priority": "HIGH", "sentiment": "NEGATIVE", "confidence": 0.95}

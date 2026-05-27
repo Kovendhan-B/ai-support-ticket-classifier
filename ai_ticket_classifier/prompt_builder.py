@@ -16,7 +16,7 @@ def load_prompt(version: str) -> Template:
     except Exception as e:
         raise Exception(f"Error loading prompt template: {e}")
     
-def build_prompt(version: str, ticket_text: str) -> str:
+def build_prompt(ticket_text: str,version: str) -> str:
     template_str = load_prompt(version)
     template = Template(template_str)
     return template.safe_substitute(ticket_text=ticket_text)
