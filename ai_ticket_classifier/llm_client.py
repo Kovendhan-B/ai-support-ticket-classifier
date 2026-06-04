@@ -1,5 +1,7 @@
-from ai_ticket_classifier import prompt_builder
 import json
+
+from ai_ticket_classifier import prompt_builder
+from ai_ticket_classifier.validator import validate_classification
 
 def call_llm_api(prompt: str) -> str:
     """
@@ -10,6 +12,8 @@ def call_llm_api(prompt: str) -> str:
         "category": "TECHNICAL",
         "priority": "HIGH",
         "sentiment": "NEGATIVE",
+        "summary": "The user is reporting a technical issue affecting their experience.",
+        "suggested_team": "Engineering",
         "confidence": 0.91
     })
 
@@ -26,13 +30,13 @@ def classify_ticket(redacted_text: str, prompt_version: str) -> tuple:
 
     llm_response = call_llm_api(prompt)
 
-    try:
-        result = json.loads(llm_response)
-        return (
-            result["category"],
-            result["priority"],
-            result["sentiment"],
-            result.get("confidence")
-        )
-    except Exception as e:
-        raise RuntimeError(f"Failed to parse LLM response: {e}\nResponse: {llm_response}")
+    classification = validate_classification(llm_response)
+    if classification is None:
+        raise RuntimeError(f"Failed to parse LLM response:\nResponse: {llm_response}")
+
+    return (
+        classification.category.value,
+        classification.priority.value,
+        classification.sentiment.value,
+        classification.confidence,
+    )

@@ -1,13 +1,37 @@
-from pydantic import BaseModel, Field
+from enum import Enum
 from typing import List
 
+from pydantic import BaseModel, Field
+
+
+class TicketCategory(str, Enum):
+    BILLING = "BILLING"
+    TECHNICAL = "TECHNICAL"
+    ACCOUNT = "ACCOUNT"
+    SHIPPING = "SHIPPING"
+    GENERAL = "GENERAL"
+
+
+class TicketPriority(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class TicketSentiment(str, Enum):
+    POSITIVE = "POSITIVE"
+    NEUTRAL = "NEUTRAL"
+    NEGATIVE = "NEGATIVE"
+    FRUSTRATED = "FRUSTRATED"
+
 class TicketClassification(BaseModel):
-    category: str = Field(description="The category of the ticket")
-    priority: str = Field(description="The priority of the ticket")
-    sentiment: str = Field(description="The sentiment of the user")
-    summary: str = Field(description="A brief summary of the issue")
+    category: TicketCategory = Field(description="The category of the ticket")
+    priority: TicketPriority = Field(description="The priority of the ticket")
+    sentiment: TicketSentiment = Field(description="The sentiment of the user")
+    summary: str = Field(description="A brief summary of the issue", max_length=100)
     suggested_team: str = Field(description="The team best suited to handle this ticket")
-    confidence: float = Field(description="Confidence score of the classification")
+    confidence: float = Field(description="Confidence score of the classification", ge=0, le=1)
 
 class RedactionResult(BaseModel):
     redacted_text: str = Field(description="The text with PII redacted")
